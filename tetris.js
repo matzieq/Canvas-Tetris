@@ -3,6 +3,33 @@ const context = canvas.getContext('2d');
 
 context.scale(20, 20);
 
+let dropCounter = 0;
+let dropInterval = 1000;
+let lastTime = 0;
+
+let linesToNextLevel = 5;
+let linesThisLevel = 0;
+
+const arena = createMatrix(12, 20);
+
+const colors = [
+    null,
+    'orangered',
+    'dodgerblue',
+    'pink',
+    'goldenrod',
+    'olive',
+    'lightblue',
+    'darkgrey'
+];
+
+const player = {
+    pos: {x: 0, y: 0},
+    matrix: null,
+    score: 0,
+    lines: 0
+}
+
 function arenaSweep () {
     let rowCount = 1;
     outer: for (let y = arena.length -1; y > 0; --y) {
@@ -16,6 +43,9 @@ function arenaSweep () {
         ++y;
         player.score += rowCount * 10;
         rowCount *= 2;
+        player.lines ++;
+        linesThisLevel ++;
+        levelCheck ();
     }
 }
 
@@ -111,6 +141,16 @@ function drawMatrix (matrix, offset) {
     });
 }
 
+function levelCheck () {
+    if (linesThisLevel >= linesToNextLevel) {
+        linesThisLevel = 0;
+        if (dropInterval > 100) {
+            dropInterval -= linesToNextLevel * 10;
+        } 
+        console.log(dropInterval);
+    }
+}
+
 function merge (arena, player) {
     player.matrix.forEach((row, y) => {
         row.forEach((value, x) => {
@@ -149,6 +189,8 @@ function playerReset () {
     if (collide(arena, player)) {
         arena.forEach(row => row.fill(0));
         player.score = 0;
+        player.lines = 0;
+        dropInterval = 1000;
         updateScore ();
     }
 }
@@ -187,9 +229,7 @@ function rotate (matrix, dir) {
     }
 }
 
-let dropCounter = 0;
-let dropInterval = 1000;
-let lastTime = 0;
+
 
 function update (time = 0) {
     const deltaTime = time - lastTime;
@@ -204,26 +244,11 @@ function update (time = 0) {
 
 function updateScore () {
     document.querySelector("#score").innerText = player.score;
+    document.querySelector("#lines").innerText = player.lines;
+
 }
 
-const arena = createMatrix(12, 20);
 
-const colors = [
-    null,
-    'orangered',
-    'dodgerblue',
-    'pink',
-    'goldenrod',
-    'olive',
-    'lightblue',
-    'darkgrey'
-];
-
-const player = {
-    pos: {x: 0, y: 0},
-    matrix: null,
-    score: 0
-}
 
 document.addEventListener('keydown', event => {
     if (event.keyCode === 37) {

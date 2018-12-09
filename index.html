@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Tetris Clone</title>
+    <title>Tetris Clone</title>    
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="score"></div>
+    <div class="dashboard">
+        <p>
+            Score <span id="score"></span>
+        </p> 
+        <p>
+            Lines <span id="lines"></span>
+        </p>
+    </div>
     <canvas id="tetris" width="240" height="400"></canvas>
     <script src="tetris.js"></script>
 </body>
